@@ -4,10 +4,12 @@ import by.pvt.kish.exception.DaoException;
 import by.pvt.kish.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Kish Alexey
@@ -105,4 +107,38 @@ public class BaseDAO<T> implements DAO<T> {
         }
         return id;
     }
+
+    public List<T> getAll(String hql) throws DaoException {
+        List<T> results;
+        try {
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            results = query.list();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in get all DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return results;
+    }
+
+    public T getById(String hql, Long id) throws DaoException {
+        T t;
+        try {
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            query.setParameter("id", id);
+            t = (T)query.uniqueResult();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in get by ID DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return t;
+    }
+
 }
