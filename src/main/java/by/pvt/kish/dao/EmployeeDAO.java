@@ -51,4 +51,40 @@ public class EmployeeDAO extends BaseDAO<Employee> {
        }
        return details;
    }
+
+    public List<Employee> getByName(String hql, String eFirstName) throws DaoException {
+        List<Employee> employees;
+        try {
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            query.setParameter("firstName", eFirstName);
+            employees = query.list();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in get by firstName DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return employees;
+    }
+
+
+    public List<Employee> getByNames(String hql, String firstName, String lastName) throws DaoException {
+        List<Employee> employees;
+        try {
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            query.setParameter("firstName", firstName);
+            query.setParameter("lastName", lastName);
+            employees = query.list();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in get by firstName DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return employees;
+    }
 }

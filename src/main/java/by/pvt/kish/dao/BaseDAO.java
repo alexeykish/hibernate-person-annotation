@@ -141,4 +141,20 @@ public class BaseDAO<T> implements DAO<T> {
         return t;
     }
 
+    public List getCount(String hql) throws DaoException {
+        List results;
+        try {
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            results = query.list();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in get by firstName DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return results;
+    }
+
 }
