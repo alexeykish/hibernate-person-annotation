@@ -31,8 +31,8 @@ public class OneToManyTest {
         department = new Department("TEST");
         did = (Long) departmentDAO.saveOrUpdate(department);
 
-        employee1 = new Employee("TEST", "TEST", "xxx-xxx-xxx");
-        employee2 = new Employee("TEST", "TEST", "xxx-xxx-xxx");
+        employee1 = new Employee("TEST", "TEST", "xxx-xxx-xxx", 30);
+        employee2 = new Employee("TEST", "TEST", "xxx-xxx-xxx", 35);
 
         employee1.setDepartment(department);
         employee2.setDepartment(department);
@@ -58,7 +58,7 @@ public class OneToManyTest {
     @Test
     public void testUpdate() throws Exception {
         Department preUpdatedDepartment = departmentDAO.get(did);
-        Employee employee3 = new Employee("UPDATE", "UPDATE", "XXX-XXX-XXX");
+        Employee employee3 = new Employee("UPDATE", "UPDATE", "XXX-XXX-XXX", 40);
         preUpdatedDepartment.setDepartmentName("UPDATE");
         preUpdatedDepartment.getEmployees().add(employee3);
         departmentDAO.saveOrUpdate(preUpdatedDepartment);

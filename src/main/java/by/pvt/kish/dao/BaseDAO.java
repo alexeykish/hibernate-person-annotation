@@ -124,11 +124,12 @@ public class BaseDAO<T> implements DAO<T> {
         return results;
     }
 
-    public T getById(String hql, Long id) throws DaoException {
+    public T getById(Long id) throws DaoException {
         T t;
         try {
             Session session = util.getSession();
             transaction = session.beginTransaction();
+            String hql = "SELECT E FROM Employee E WHERE E.employeeId=:id";
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
             t = (T)query.uniqueResult();
@@ -141,20 +142,6 @@ public class BaseDAO<T> implements DAO<T> {
         return t;
     }
 
-    public List getCount(String hql) throws DaoException {
-        List results;
-        try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
-            Query query = session.createQuery(hql);
-            results = query.list();
-            transaction.commit();
-        } catch (HibernateException e) {
-            logger.error("Error in get by firstName DAO", e);
-            transaction.rollback();
-            throw new DaoException(e);
-        }
-        return results;
-    }
+
 
 }

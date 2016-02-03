@@ -37,9 +37,9 @@ public class ManyToManyTest {
         mid1 = (Long) meetingDAO.saveOrUpdate(meeting1);
         mid2 = (Long) meetingDAO.saveOrUpdate(meeting2);
 
-        employee1 = new Employee("TEST", "TEST", "xxx-xxx-xxx");
-        employee2 = new Employee("TEST", "TEST", "xxx-xxx-xxx");
-        employee3 = new Employee("TEST", "TEST", "xxx-xxx-xxx");
+        employee1 = new Employee("TEST", "TEST", "xxx-xxx-xxx", 20);
+        employee2 = new Employee("TEST", "TEST", "xxx-xxx-xxx", 25);
+        employee3 = new Employee("TEST", "TEST", "xxx-xxx-xxx", 30);
 
         employee1.getMeetings().add(meeting1);
         employee1.getMeetings().add(meeting2);

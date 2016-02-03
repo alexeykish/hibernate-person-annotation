@@ -23,6 +23,9 @@ public class Employee implements Serializable{
     @Column
     private String cellphone;
 
+    @Column
+    private int age;
+
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
     private EmployeeDetail employeeDetail;
 
@@ -39,10 +42,11 @@ public class Employee implements Serializable{
     public Employee() {
     }
 
-    public Employee(String firstName, String lastName, String cellphone) {
+    public Employee(String firstName, String lastName, String cellphone, int age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.cellphone = cellphone;
+        this.age = age;
     }
 
     @Override
@@ -124,6 +128,14 @@ public class Employee implements Serializable{
         this.meetings = meetings;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
@@ -134,4 +146,6 @@ public class Employee implements Serializable{
                 ", department=" + department +
                 '}';
     }
+
+
 }

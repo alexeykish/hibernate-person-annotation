@@ -24,7 +24,7 @@ public class OneToOneTest {
 
     @Before
     public void setUp() throws Exception {
-        employee = new Employee("TEST", "TEST", "xxx-xxx-xxx");
+        employee = new Employee("TEST", "TEST", "xxx-xxx-xxx", 30);
         employeeDetail = new EmployeeDetail("TEST", "TEST", "TEST", "TEST");
 
         employee.setEmployeeDetail(employeeDetail);
@@ -50,6 +50,7 @@ public class OneToOneTest {
         preUpdatedEmployee.setFirstName("UPDATE");
         preUpdatedEmployee.setLastName("UPDATE");
         preUpdatedEmployee.setCellphone("XXXX-XXX-XXX");
+        preUpdatedEmployee.setAge(20);
 
         EmployeeDetail preUpdatedEmployeeDetail = employeeDetailDAO.get(eid);
         preUpdatedEmployeeDetail.setStreet("UPDATE");

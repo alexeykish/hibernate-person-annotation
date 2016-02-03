@@ -70,10 +70,11 @@ public class EmployeeDAO extends BaseDAO<Employee> {
     }
 
 
-    public List<Employee> getByNames(String hql, String firstName, String lastName) throws DaoException {
+    public List<Employee> getByNames(String firstName, String lastName) throws DaoException {
         List<Employee> employees;
         try {
             Session session = util.getSession();
+            String hql = "SELECT E FROM Employee E WHERE E.firstName=:firstName AND E.lastName=:lastName";
             transaction = session.beginTransaction();
             Query query = session.createQuery(hql);
             query.setParameter("firstName", firstName);
@@ -86,5 +87,158 @@ public class EmployeeDAO extends BaseDAO<Employee> {
             throw new DaoException(e);
         }
         return employees;
+    }
+
+    public void deleteEmployee(Long id) throws DaoException {
+        try {
+            Session session = util.getSession();
+            String hql = "DELETE FROM Employee WHERE employeeId=:id";
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            query.setParameter("id", id);
+            query.executeUpdate();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in update DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+    }
+
+    public void deleteAllEmployee() throws DaoException {
+        try {
+            Session session = util.getSession();
+            String hql = "DELETE FROM Employee";
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            query.executeUpdate();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in delete all employee DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+    }
+
+    public void insertEmployee(Long eid) throws DaoException {
+        try {
+            Session session = util.getSession();
+            String hql = "INSERT INTO Employee (firstName, lastName, cellphone, age) " +
+                    "SELECT firstName, lastName, cellphone, age " +
+                    "FROM Employee WHERE employeeId=:id";
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            query.setParameter("id", eid);
+            query.executeUpdate();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in insert DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+    }
+
+    public List getCount() throws DaoException {
+        List results;
+        try {
+            Session session = util.getSession();
+            String hql = "SELECT count(E), E.firstName FROM Employee E GROUP BY E.firstName";
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            results = query.list();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in get by firstName DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return results;
+    }
+
+    public int getMaxEmployeeAge() throws DaoException {
+        int maxAge = 0;
+        try {
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
+            String hql = "SELECT max(E.age) FROM Employee E";
+            Query query = session.createQuery(hql);
+            maxAge = (int) query.uniqueResult();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in max age DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return maxAge;
+    }
+
+    public Double getAvgEmployeeAge() throws DaoException {
+        Double avgAge = null;
+        try {
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
+            String hql = "SELECT avg(E.age) FROM Employee E";
+            Query query = session.createQuery(hql);
+            avgAge = (Double) query.uniqueResult();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in getavg age DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return avgAge;
+    }
+
+    public Long getSumEmployeeAge() throws DaoException {
+        Long sumAge = null;
+        try {
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
+            String hql = "SELECT sum (E.age) FROM Employee E";
+            Query query = session.createQuery(hql);
+            sumAge = (Long) query.uniqueResult();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in get sum age DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return sumAge;
+    }
+
+    public Long getCountEmployee() throws DaoException {
+        Long count = null;
+        try {
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
+            String hql = "SELECT count (*) FROM Employee E";
+            Query query = session.createQuery(hql);
+            count = (Long) query.uniqueResult();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in get count DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return count;
+    }
+
+    public List<Employee> getAllToPage(int pageSize, int pageNumber) throws DaoException {
+        List<Employee> results;
+        try {
+            Session session = util.getSession();
+            String hql = "FROM Employee";
+            transaction = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            query.setFirstResult((pageNumber - 1) * pageSize);
+            query.setMaxResults(pageSize);
+            results = query.list();
+            transaction.commit();
+        } catch (HibernateException e) {
+            logger.error("Error in get all to page DAO", e);
+            transaction.rollback();
+            throw new DaoException(e);
+        }
+        return results;
     }
 }
